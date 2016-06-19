@@ -72,7 +72,7 @@ public class Utils {
 
   public static ContentProviderOperation buildBatchOperation(JSONObject jsonObject){
     ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
-        QuoteProvider.Quotes.CONTENT_URI);
+            QuoteProvider.Quotes.CONTENT_URI);
     try {
       String change = jsonObject.getString("Change");
       builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
@@ -86,10 +86,30 @@ public class Utils {
       }else{
         builder.withValue(QuoteColumns.ISUP, 1);
       }
-
     } catch (JSONException e){
       e.printStackTrace();
     }
     return builder.build();
+  }
+
+  public static ArrayList historyJsonToGraphValues(String JSON){
+    JSONObject jsonObject = null;
+    JSONArray jsonArray = null;
+    ArrayList<String> formattedResults = new ArrayList<>();
+    try {
+      jsonObject = new JSONObject(JSON);
+      jsonObject = jsonObject.getJSONObject("results");
+      jsonArray = jsonObject.getJSONArray("quote");
+      for(int i=0; i<jsonArray.length(); i++){
+        jsonObject = jsonArray.getJSONObject(i);
+        formattedResults.add(jsonObject.getString("Date"));
+        formattedResults.add(jsonObject.getString("Close"));
+        formattedResults.add(jsonObject.getString("Volume"));
+      }
+    }
+    catch (JSONException e){
+        e.printStackTrace();
+    }
+    return formattedResults;
   }
 }

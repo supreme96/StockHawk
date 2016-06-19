@@ -131,6 +131,7 @@ public class StockTaskService extends GcmTaskService{
       }
     }
 
+
     return result;
   }
 

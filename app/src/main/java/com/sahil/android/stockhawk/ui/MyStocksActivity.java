@@ -35,6 +35,9 @@ import com.google.android.gms.gcm.Task;
 import com.melnykov.fab.FloatingActionButton;
 import com.sahil.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
   /**
@@ -69,13 +72,20 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     mServiceIntent = new Intent(this, StockIntentService.class);
     if (savedInstanceState == null){
       // Run the initialize task service so that some stocks appear upon an empty database
-      mServiceIntent.putExtra("tag", "init");
+      mServiceIntent.putExtra("tag","init");
       if (isConnected){
         startService(mServiceIntent);
       } else{
         networkToast();
       }
     }
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    Calendar cal = Calendar.getInstance();
+    String startDate = sdf.format(cal.getTime());
+    cal.add(Calendar.DATE, -30);
+    String endDate = sdf.format(cal.getTime());
+
     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
     getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
@@ -86,6 +96,13 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
               @Override public void onItemClick(View v, int position) {
                 //TODO:
                 // do something on item click
+                Intent i = new Intent(getApplicationContext(), HistoryActivity.class);
+                Bundle argsBundle = new Bundle();
+                argsBundle.putString("symbol", symbol);
+                argsBundle.putString("startDate", startDate);
+                argsBundle.putString("endDate", endDate);
+                i.putExtras(argsBundle);
+                startActivity(i);
               }
             }));
     recyclerView.setAdapter(mCursorAdapter);
@@ -100,9 +117,11 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
               .content(R.string.content_test)
               .inputType(InputType.TYPE_CLASS_TEXT)
               .input(R.string.input_hint, R.string.input_prefill, new MaterialDialog.InputCallback() {
-                @Override public void onInput(MaterialDialog dialog, CharSequence input) {
+                @Override public void onInput(MaterialDialog dialog, CharSequence Input) {
                   // On FAB click, receive user input. Make sure the stock doesn't already exist
                   // in the DB and proceed accordingly
+                  String input = Input.toString();
+                  input = input.toUpperCase();
                   Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                       new String[] { QuoteColumns.SYMBOL }, QuoteColumns.SYMBOL + "= ?",
                       new String[] { input.toString() }, null);
@@ -163,7 +182,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   }
 
   public void networkToast(){
-    Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
+    Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_LONG).show();
   }
 
   public void restoreActionBar() {
