@@ -38,14 +38,14 @@ public class StockTaskService extends GcmTaskService{
   public StockTaskService(Context context){
     mContext = context;
   }
-  String fetchData(String url) throws IOException{
-    Request request = new Request.Builder()
-        .url(url)
-        .build();
+    String fetchData(String url) throws IOException{
+      Request request = new Request.Builder()
+          .url(url)
+          .build();
 
-    Response response = client.newCall(request).execute();
-    return response.body().string();
-  }
+      Response response = client.newCall(request).execute();
+      return response.body().string();
+    }
 
   @Override
   public int onRunTask(TaskParams params){
@@ -112,6 +112,7 @@ public class StockTaskService extends GcmTaskService{
       urlString = urlStringBuilder.toString();
       try{
         getResponse = fetchData(urlString);
+        Log.v("sahil stocktsksrvc ", urlString);
         result = GcmNetworkManager.RESULT_SUCCESS;
         try {
           ContentValues contentValues = new ContentValues();

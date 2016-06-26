@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +38,8 @@ import com.sahil.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import static android.R.id.input;
 
 public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -80,11 +83,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
       }
     }
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    Calendar cal = Calendar.getInstance();
-    String startDate = sdf.format(cal.getTime());
-    cal.add(Calendar.DATE, -30);
-    String endDate = sdf.format(cal.getTime());
 
     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -96,6 +94,22 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
               @Override public void onItemClick(View v, int position) {
                 //TODO:
                 // do something on item click
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Calendar cal = Calendar.getInstance();
+                String endDate = sdf.format(cal.getTime());
+                cal.add(Calendar.DATE, -30);
+                String startDate = sdf.format(cal.getTime());
+                String symbol;
+
+
+                Cursor c = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                        new String[] { QuoteColumns.SYMBOL }, null,
+                        null, QuoteColumns._ID);
+                c.moveToPosition(position);
+
+                symbol = c.getString(0);
+                c.close();
+                //Log.v("sahil inside service", "symbol :"+symbol+"  startDate:"+startDate+ "  endDate :" +endDate);
                 Intent i = new Intent(getApplicationContext(), HistoryActivity.class);
                 Bundle argsBundle = new Bundle();
                 argsBundle.putString("symbol", symbol);

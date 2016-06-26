@@ -39,6 +39,14 @@
             </intent-filter>
         </service>
         <service android:name="com.sahil.android.stockhawk.service.StockIntentService" />
+        <service android:name="com.sahil.android.stockhawk.service.HistoryTaskService"
+                 android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE"
+                 android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY"/>
+            </intent-filter>
+        </service>
+        <service android:name="com.sahil.android.stockhawk.service.HistoryIntentService" />
         <provider
             android:authorities="com.sahil.android.stockhawk.data.QuoteProvider"
             android:name="com.sahil.android.stockhawk.data.generated.QuoteProvider"

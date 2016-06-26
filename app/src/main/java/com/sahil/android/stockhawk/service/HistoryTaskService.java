@@ -53,18 +53,22 @@ public class HistoryTaskService extends GcmTaskService {
 
             Bundle bundle = taskParams.getExtras();
 
-            String symbol = bundle.getString("symbol");
+            symbol = bundle.getString("symbol");
             startDate = bundle.getString("startDate");
             endDate = bundle.getString("endDate");
+
+
+
+
 
             StringBuilder urlStringBuilder = new StringBuilder();
             try {
                 // Base URL for the Yahoo query
                 urlStringBuilder.append("https://query.yahooapis.com/v1/public/yql?q=");
                 urlStringBuilder.append(URLEncoder.encode("select Date,Close,Volume from yahoo.finance.historicaldata where symbol = \"", "UTF-8"));
-                urlStringBuilder.append(URLEncoder.encode(symbol + "\"", "UTF-8"));
-                urlStringBuilder.append(URLEncoder.encode(" and startDate = \"" + startDate + "\"", "UTF-8"));
-                urlStringBuilder.append(URLEncoder.encode(" and endDate = \"" + endDate + "\"", "UTF-8"));
+                urlStringBuilder.append(URLEncoder.encode(symbol + "\"", "iso-8859-1"));
+                urlStringBuilder.append(URLEncoder.encode(" and startDate = \"" + startDate + "\"", "iso-8859-1"));
+                urlStringBuilder.append(URLEncoder.encode(" and endDate = \"" + endDate + "\"", "iso-8859-1"));
                 urlStringBuilder.append("&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");
                 Log.v("Sahil url verify :", urlStringBuilder.toString());
 
@@ -85,9 +89,9 @@ public class HistoryTaskService extends GcmTaskService {
                     e.printStackTrace();
                 }
             }
+            Log.v("history response", getResponse);
             if (getResponse != null) {
-                ArrayList<String> list = Utils.historyJsonToGraphValues(getResponse);
-                Log.v("Sahil arraylist", list.get(0) + " " + list.get(1));
+                ArrayList<String> resultsList = Utils.historyJsonToGraphValues(getResponse);
             }
 
         return 0;

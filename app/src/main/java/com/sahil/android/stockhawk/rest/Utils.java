@@ -98,6 +98,7 @@ public class Utils {
     ArrayList<String> formattedResults = new ArrayList<>();
     try {
       jsonObject = new JSONObject(JSON);
+      jsonObject = jsonObject.getJSONObject("query");
       jsonObject = jsonObject.getJSONObject("results");
       jsonArray = jsonObject.getJSONArray("quote");
       for(int i=0; i<jsonArray.length(); i++){
