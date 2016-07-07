@@ -15,6 +15,7 @@ import com.google.android.gms.gcm.TaskParams;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.sahil.android.stockhawk.R;
@@ -91,7 +92,7 @@ public class HistoryActivity extends AppCompatActivity {
             catch (java.text.ParseException e){}
         }
         for(int i=0;i<dates.length;i++){
-            datapoints[i] = new DataPoint(dates[dates.length-1-i], close[close.length-1-i]);
+            datapoints[i] = new DataPoint(i, close[close.length-1-i]);
         }
         for(int i = 0 ; i<datapoints.length;i++){
             Log.v("data parsed", "date : " + dates[dates.length-1-i]+" close :" + close[close.length-1-i]);}
@@ -99,12 +100,19 @@ public class HistoryActivity extends AppCompatActivity {
         //GRAPH PROBLEM IS DUE TO HERE
 
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(datapoints);
-        graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext()));
+        /*graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext()));
         graphView.getGridLabelRenderer().setHumanRounding(false);
         graphView.getGridLabelRenderer().setNumHorizontalLabels(3);
-        graphView.getViewport().setXAxisBoundsManual(false);
+        graphView.getViewport().setXAxisBoundsManual(false);*/
         //graphView.getViewport().setMinX(dates[0].getTime());
         //graphView.getViewport().setMaxX(dates[dates.length-1].getTime());
+
+        graphView.setTitle("Price over past 30 days");
+        graphView.setTitleColor(getResources().getColor(R.color.white));
+        StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView);
+        staticLabelsFormatter.setHorizontalLabels(new String[] {" 30 days ago ", " 15 days ago ", " yesterday "});
+        graphView.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+
         graphView.addSeries(series);
     }
 }
