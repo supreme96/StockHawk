@@ -22,7 +22,7 @@ public class HistoryIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        HistoryTaskService historyTaskService = new HistoryTaskService(this);
+        HistoryTaskService historyTaskService = new HistoryTaskService(getApplicationContext());
         Bundle args = intent.getExtras();
         historyTaskService.onRunTask(new TaskParams("symbolData", args));
     }

@@ -1,13 +1,16 @@
 package com.sahil.android.stockhawk.service;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
 import com.sahil.android.stockhawk.rest.Utils;
+import com.sahil.android.stockhawk.ui.HistoryActivity;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -28,7 +31,8 @@ public class HistoryTaskService extends GcmTaskService {
     String symbol;
     String startDate,endDate;
 
-    public HistoryTaskService() {
+    public HistoryTaskService(){
+
     }
 
     public HistoryTaskService(Context context) {
@@ -92,6 +96,16 @@ public class HistoryTaskService extends GcmTaskService {
             Log.v("history response", getResponse);
             if (getResponse != null) {
                 ArrayList<String> resultsList = Utils.historyJsonToGraphValues(getResponse);
+                //HistoryActivity.drawGraph(resultsList);
+                /*
+                Intent i = new Intent(mContext, HistoryActivity.class);
+                i.putStringArrayListExtra("list", resultsList);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(i);*/
+
+                Intent intent = new Intent("historyResults");
+                intent.putStringArrayListExtra("list", resultsList);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
             }
 
         return 0;
