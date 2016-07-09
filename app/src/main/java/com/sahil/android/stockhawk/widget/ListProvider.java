@@ -115,9 +115,15 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public RemoteViews getViewAt(int i) {
         final RemoteViews remoteView = new RemoteViews(
-                context.getPackageName(), R.layout.widget_list_item);
-        String string = list.get(i).symbol+"\t"+list.get(i).bid+"\t"+list.get(i).change;
-        remoteView.setTextViewText(R.id.widget_list_text, string);
+                context.getPackageName(), R.layout.list_item_quote);
+        String string = list.get(i).symbol+"\t"+list.get(i).bid+"+\t"+list.get(i).change;
+        remoteView.setTextViewText(R.id.stock_symbol, list.get(i).symbol);
+        remoteView.setTextViewText(R.id.bid_price, list.get(i).bid+"$");
+        remoteView.setTextViewText(R.id.change, list.get(i).change+"$");
+        remoteView.setTextColor(R.id.stock_symbol, context.getResources().getColor(R.color.black));
+        remoteView.setTextColor(R.id.bid_price, context.getResources().getColor(R.color.black));
+        remoteView.setTextColor(R.id.change, context.getResources().getColor(R.color.black));
+
         //Log.v("widget quote sahil", string);
         //remoteView.setTextViewText(R.id.widget_list_text, "sahil");
         return remoteView;

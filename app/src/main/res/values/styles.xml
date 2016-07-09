@@ -21,4 +21,9 @@
     <item name="android:textAllCaps">true</item>
   </style>
 
+  <!--<style name="translucent">
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:opacity"></item>
+  </style>
+-->
 </resources>
