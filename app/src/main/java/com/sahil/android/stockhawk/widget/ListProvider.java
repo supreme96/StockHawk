@@ -1,44 +1,35 @@
 package com.sahil.android.stockhawk.widget;
 
-import android.app.LauncherActivity;
-import android.app.ListActivity;
-import android.app.LoaderManager;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import android.widget.Toast;
 
 import com.sahil.android.stockhawk.R;
 import com.sahil.android.stockhawk.data.QuoteColumns;
 import com.sahil.android.stockhawk.data.QuoteProvider;
-import com.sahil.android.stockhawk.rest.QuoteCursorAdapter;
 
 import java.util.ArrayList;
-
-import static android.R.id.input;
 
 /**
  * Created by sahil on 7/7/16.
  */
 
-public class ListProvider extends ListActivity implements RemoteViewsService.RemoteViewsFactory, LoaderManager.LoaderCallbacks<Cursor> {
+public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
+
+    private Cursor mCursor;
+    private Context context = null;
+    private int appWidgetId;
+    private ArrayList<WidgetQuote> list = new ArrayList<WidgetQuote>();
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+    public void onDestroy() {}
 
     @Override
-    public void onDataSetChanged() {
-
-    }
+    public void onDataSetChanged() {onCreate();}
 
     @Override
     public RemoteViews getLoadingView() {
@@ -47,7 +38,7 @@ public class ListProvider extends ListActivity implements RemoteViewsService.Rem
 
     @Override
     public int getViewTypeCount() {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -55,72 +46,85 @@ public class ListProvider extends ListActivity implements RemoteViewsService.Rem
         return false;
     }
 
-    private Cursor mCursor;
-    private QuoteCursorAdapter mCursorAdapter;
-    private ArrayList stocksList = new ArrayList();
-    private Context context = null;
-    private int appWidgetId;
-
     @Override
     public void onCreate() {
 
-        //mCursorAdapter = new QuoteCursorAdapter(context, mCursor);
+        mCursor = context.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+                new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
+                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
+                QuoteColumns.ISCURRENT + " = ?",
+                new String[]{"1"},
+                null);
+
+        list.clear();
+
+
+        for (mCursor.moveToFirst(); ! mCursor.isAfterLast(); mCursor.moveToNext()) {
+            list.add(new WidgetQuote(mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL)),
+                    mCursor.getString(mCursor.getColumnIndex(QuoteColumns.BIDPRICE)),
+                    mCursor.getString(mCursor.getColumnIndex(QuoteColumns.CHANGE))));
+        }
     }
 
     public ListProvider(Context context, Intent intent) {
         this.context = context;
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
-        getLoaderManager().initLoader(0, null, this);
-        mCursor = getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+        /*list.add("sahil");
+        list.add("sahil2");
+        list.add("sahil3");
+        list.add("sahil4");
+        list.add("sahil5");
+        list.add("sahil6");
+        list.add("sahil7");*/
+
+        /*
+        mCursor = this.context.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
                 new String[]{ QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
                         QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
                 QuoteColumns.ISCURRENT + " = ?",
                 new String[]{"1"},
                 null);
+
+        list.clear();
+
+        if(mCursor.getCount()!=0){
+        for(mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()){
+            list.add(new WidgetQuote(mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL)),
+                    mCursor.getString(mCursor.getColumnIndex(QuoteColumns.BIDPRICE)),
+                    mCursor.getString(mCursor.getColumnIndex(QuoteColumns.CHANGE))));
+        }}
+        else{
+            System.out.println("cursor empty sahil");
+        }*/
+
     }
 
     @Override
-    public int getCount() {
-        return mCursor.getCount();
+    public int getCount() {/*
+        if(mCursor.getCount() == 0){
+            return 5;
+        }
+        else{
+            return 1;
+        }
+    }*/
+        return list.size();
     }
 
     @Override
     public RemoteViews getViewAt(int i) {
         final RemoteViews remoteView = new RemoteViews(
                 context.getPackageName(), R.layout.widget_list_item);
-        mCursor.moveToPosition(i);
-        //remoteView.setTextViewText(R.id.stock_symbol, mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL)));
-        //remoteView.setTextViewText(R.id.bid_price, mCursor.getString(mCursor.getColumnIndex(QuoteColumns.BIDPRICE)));
-        //remoteView.setTextViewText(R.id.change, mCursor.getString(mCursor.getColumnIndex(QuoteColumns.CHANGE)));
-        Log.v("widget debug", mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL))+"\t"+mCursor.getString(mCursor.getColumnIndex(QuoteColumns.BIDPRICE))+"  "+getString(mCursor.getColumnIndex(QuoteColumns.CHANGE)));
-        remoteView.setTextViewText(R.id.widget_list_text, mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL))+"\t"+mCursor.getString(mCursor.getColumnIndex(QuoteColumns.BIDPRICE))+"  "+getString(mCursor.getColumnIndex(QuoteColumns.CHANGE)));
+        String string = list.get(i).symbol+"\t"+list.get(i).bid+"\t"+list.get(i).change;
+        remoteView.setTextViewText(R.id.widget_list_text, string);
+        //Log.v("widget quote sahil", string);
+        //remoteView.setTextViewText(R.id.widget_list_text, "sahil");
         return remoteView;
     }
 
     @Override
     public long getItemId(int i) {
         return i;
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args){
-        // This narrows the return to only the stocks that are most current.
-        return new CursorLoader(context, QuoteProvider.Quotes.CONTENT_URI,
-                new String[]{ QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE, QuoteColumns.CHANGE},
-                QuoteColumns.ISCURRENT + " = ?",
-                new String[]{"1"},
-                null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data){
-        mCursorAdapter.swapCursor(data);
-        mCursor = data;
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader){
-        mCursorAdapter.swapCursor(null);
     }
 }
