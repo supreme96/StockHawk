@@ -3,12 +3,17 @@ package com.sahil.android.stockhawk.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.RemoteViews;
 
 import com.sahil.android.stockhawk.R;
+import com.sahil.android.stockhawk.service.StockTaskService;
 import com.sahil.android.stockhawk.ui.MyStocksActivity;
 
 
@@ -21,10 +26,20 @@ public class StockWidgetProvider extends AppWidgetProvider {
     Context mcontext;
 
     @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+        if(StockTaskService.ACTION_DATA_UPDATED.equals(intent.getAction())){
+            ComponentName name = new ComponentName(context, StockWidgetProvider.class);
+            int [] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(name);
+            AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(ids, R.id.widget_list_view);
+        }
+    }
+
+    @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         mcontext = context;
 
-        for (int i = 0; i < appWidgetIds.length; i++) {
+        for (int i = 0; i < appWidgetIds.length; ++i) {
 
             // Create an Intent to launch ExampleActivity
             Intent intent = new Intent(context, MyStocksActivity.class);

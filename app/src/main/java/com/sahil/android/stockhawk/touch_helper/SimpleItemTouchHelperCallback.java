@@ -1,7 +1,11 @@
 package com.sahil.android.stockhawk.touch_helper;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+
+import static com.sahil.android.stockhawk.service.StockTaskService.ACTION_DATA_UPDATED;
 
 /**
  * Created by sahil on 10/6/15.
@@ -10,9 +14,13 @@ import android.support.v7.widget.helper.ItemTouchHelper;
  */
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback{
   private final ItemTouchHelperAdapter mAdapter;
+
+  private final Context mContext;
+
   public static final float ALPHA_FULL = 1.0f;
 
-  public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter){
+  public SimpleItemTouchHelperCallback(Context context, ItemTouchHelperAdapter adapter){
+    mContext = context;
     mAdapter = adapter;
   }
 
@@ -36,6 +44,8 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback{
   @Override
   public void onSwiped(RecyclerView.ViewHolder viewHolder, int i){
     mAdapter.onItemDismiss(viewHolder.getAdapterPosition());
+    Intent dataUpdated = new Intent(ACTION_DATA_UPDATED);
+    mContext.sendBroadcast(dataUpdated);
   }
 
 

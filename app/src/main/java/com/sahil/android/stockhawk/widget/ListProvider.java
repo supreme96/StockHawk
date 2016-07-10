@@ -1,9 +1,13 @@
 package com.sahil.android.stockhawk.widget;
 
 import android.appwidget.AppWidgetManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import android.widget.Toast;
@@ -29,7 +33,23 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
     public void onDestroy() {}
 
     @Override
-    public void onDataSetChanged() {onCreate();}
+    public void onDataSetChanged() {
+        mCursor = context.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
+            new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
+                    QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
+            QuoteColumns.ISCURRENT + " = ?",
+            new String[]{"1"},
+            null);
+
+        list.clear();
+
+
+        for (mCursor.moveToFirst(); ! mCursor.isAfterLast(); mCursor.moveToNext()) {
+            list.add(new WidgetQuote(mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL)),
+                    mCursor.getString(mCursor.getColumnIndex(QuoteColumns.BIDPRICE)),
+                    mCursor.getString(mCursor.getColumnIndex(QuoteColumns.CHANGE))));
+        }
+    }
 
     @Override
     public RemoteViews getLoadingView() {
@@ -43,27 +63,12 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public boolean hasStableIds() {
-        return false;
+        return true;
     }
 
     @Override
     public void onCreate() {
 
-        mCursor = context.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                new String[]{QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
-                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
-                QuoteColumns.ISCURRENT + " = ?",
-                new String[]{"1"},
-                null);
-
-        list.clear();
-
-
-        for (mCursor.moveToFirst(); ! mCursor.isAfterLast(); mCursor.moveToNext()) {
-            list.add(new WidgetQuote(mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL)),
-                    mCursor.getString(mCursor.getColumnIndex(QuoteColumns.BIDPRICE)),
-                    mCursor.getString(mCursor.getColumnIndex(QuoteColumns.CHANGE))));
-        }
     }
 
     public ListProvider(Context context, Intent intent) {
