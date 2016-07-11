@@ -1,13 +1,21 @@
 package com.sahil.android.stockhawk.rest;
 
 import android.content.ContentProviderOperation;
+import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.sahil.android.stockhawk.data.QuoteColumns;
 import com.sahil.android.stockhawk.data.QuoteProvider;
+import com.sahil.android.stockhawk.ui.MyStocksActivity;
+
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static android.os.Looper.getMainLooper;
 
 /**
  * Created by sahil on 10/8/15.
@@ -15,10 +23,10 @@ import org.json.JSONObject;
 public class Utils {
 
   private static String LOG_TAG = Utils.class.getSimpleName();
-
   public static boolean showPercent = true;
 
-  public static ArrayList quoteJsonToContentVals(String JSON){
+  public static ArrayList quoteJsonToContentVals(Context context, String JSON){
+    final Context mContext = context;
     ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
     JSONObject jsonObject = null;
     JSONArray resultsArray = null;
@@ -30,7 +38,17 @@ public class Utils {
         if (count == 1){
           jsonObject = jsonObject.getJSONObject("results")
               .getJSONObject("quote");
-          batchOperations.add(buildBatchOperation(jsonObject));
+          if(!jsonObject.getString("Ask").equals("null")) {
+            batchOperations.add(buildBatchOperation(jsonObject));
+          }else {
+            Handler mHandler = new Handler(getMainLooper());
+            mHandler.post(new Runnable() {
+              @Override
+              public void run() {
+                Toast.makeText(mContext, "Entered invalid stock", Toast.LENGTH_SHORT).show();
+              }
+            });
+          }
         } else{
           resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
 
