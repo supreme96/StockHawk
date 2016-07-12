@@ -18,14 +18,16 @@
             android:layout_height="match_parent"
             android:background="@mipmap/icon"
             android:layout_weight="5"
-            android:id="@+id/imageView"/>
+            android:id="@+id/imageView"
+            android:contentDescription="@string/app_name"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="My Portfolio"
-            android:id="@+id/button"/>
+            android:id="@+id/button"
+            android:contentDescription="@string/watchlist"/>
 
 
 

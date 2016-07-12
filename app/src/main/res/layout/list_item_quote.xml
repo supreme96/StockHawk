@@ -32,7 +32,6 @@
         android:paddingRight="10sp"
         android:paddingEnd="10sp"
         tools:text="1000.00"
-        android:contentDescription="@string/stock_price"
         />
     <TextView
         android:id="@+id/change"
@@ -44,8 +43,6 @@
         android:paddingStart="3dp"
         android:paddingRight="3dp"
         android:paddingEnd="3dp"
-        tools:text="100%"
-        android:contentDescription="@string/percent_change"
-        />
+        tools:text="100%"/>
   </LinearLayout>
 </LinearLayout>
