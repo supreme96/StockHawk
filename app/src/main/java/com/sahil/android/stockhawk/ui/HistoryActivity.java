@@ -11,6 +11,7 @@ import android.provider.ContactsContract;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.gcm.TaskParams;
@@ -77,6 +78,25 @@ public class HistoryActivity extends AppCompatActivity {
             //Bundle bundle = intent.getExtras();
             StockInfo object = (StockInfo) intent.getSerializableExtra("object");
             Toast.makeText(context, "Name :" + object.Name, Toast.LENGTH_SHORT).show();
+            SimpleDateFormat f1 = new SimpleDateFormat("MM/dd/yyyy");
+            SimpleDateFormat f2 = new SimpleDateFormat("EEE, dd MMM yyyy ");
+            TextView infoView = (TextView) findViewById(R.id.infoView);
+            try {
+                infoView.setText("Name : " + object.Name + "\n"+
+                        "Stock Ticker : " + object.symbol + "\n"+
+                        "Stock Exchange :" + object.StockExchange + "\n" +
+                        "Currency : " + object.Currency + "\n"+
+                        "Ask Price :" + object.Ask + "$ " + "\n"+
+                        "Bid Price : " + object.Bid + "$ " + "\n"+
+                        "Price Ranged Last : " + object.DaysRange + "$" + "\n"+
+                        "Change : " + object.Change + "$ "+ "\n"+
+                        "Last Trade Date : " + f2.format(f1.parse(object.LastTradeDate)) + "\n" +
+                        "Year High : " + object.YearHigh + "$" + "\n"+
+                        "Year Low : " + object.YearLow + "$" + "\n"+
+                        "Market Capitalization : " + object.MarketCapitalization + "$" + "\n");
+            } catch (java.text.ParseException e) {
+                e.printStackTrace();
+            }
         }
     };
 
@@ -93,7 +113,6 @@ public class HistoryActivity extends AppCompatActivity {
         mInfoServiceIntent.putExtras(bund);
         startService(mInfoServiceIntent);
         startService(mServiceIntent);
-
         Log.v("sahil create", "On create complete");
     }
 
