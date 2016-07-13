@@ -132,4 +132,28 @@ public class Utils {
 
     return formattedResults;
   }
+
+  public static StockInfo infoJsonToValues(String JSON) throws JSONException {
+    JSONObject jsonObject = new JSONObject(JSON);
+    jsonObject = jsonObject.getJSONObject("query");
+    jsonObject = jsonObject.getJSONObject("results");
+    jsonObject = jsonObject.getJSONObject("quote");
+    String symbol = jsonObject.getString("symbol");
+    String Ask = jsonObject.getString("Ask");
+    String Bid = jsonObject.getString("Bid");
+    String Change = jsonObject.getString("Change");
+    String Currency = jsonObject.getString("Currency");
+    String LastTradeDate = jsonObject.getString("LastTradeDate");
+    String YearLow = jsonObject.getString("YearLow");
+    String YearHigh = jsonObject.getString("YearHigh");
+    String MarketCapitalization = jsonObject.getString("MarketCapitalization");
+    String DaysRange = jsonObject.getString("DaysRange");
+    String Name = jsonObject.getString("Name");
+    String StockExchange = jsonObject.getString("StockExchange");
+
+    StockInfo object = new StockInfo(symbol,Ask,Bid,Change,Currency,LastTradeDate,
+            YearLow, YearHigh, MarketCapitalization, DaysRange,
+            Name, StockExchange);
+    return object;
+  }
 }

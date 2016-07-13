@@ -11,6 +11,8 @@ import android.provider.ContactsContract;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.google.android.gms.gcm.TaskParams;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
@@ -19,8 +21,10 @@ import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.sahil.android.stockhawk.R;
+import com.sahil.android.stockhawk.rest.StockInfo;
 import com.sahil.android.stockhawk.service.HistoryIntentService;
 import com.sahil.android.stockhawk.service.HistoryTaskService;
+import com.sahil.android.stockhawk.service.InfoIntentService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -49,12 +53,14 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(br, new IntentFilter("historyResults"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(br_info, new IntentFilter("infoResults"));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(br);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(br_info);
     }
 
     protected BroadcastReceiver br = new BroadcastReceiver() {
@@ -62,6 +68,15 @@ public class HistoryActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             results = intent.getStringArrayListExtra("list");
             drawGraph();
+        }
+    };
+
+    protected BroadcastReceiver br_info = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //Bundle bundle = intent.getExtras();
+            StockInfo object = (StockInfo) intent.getSerializableExtra("object");
+            Toast.makeText(context, "Name :" + object.Name, Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -74,7 +89,12 @@ public class HistoryActivity extends AppCompatActivity {
         Bundle bund;
         bund = getIntent().getExtras();
         mServiceIntent.putExtras(bund);
+        Intent mInfoServiceIntent = new Intent(getApplicationContext(), InfoIntentService.class);
+        mInfoServiceIntent.putExtras(bund);
+        startService(mInfoServiceIntent);
         startService(mServiceIntent);
+
+        Log.v("sahil create", "On create complete");
     }
 
     public void drawGraph(){
