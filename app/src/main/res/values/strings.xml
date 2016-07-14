@@ -42,4 +42,8 @@
   <string name="days15" translatable="true"> 15 days ago </string>
   <string name="yesterday" translatable="true"> till  yesterday </string>
 
+<!-- Toast msg displayed when user enters invalid stock ticker -->
+
+  <string name="invalid_stock" translatable="true">Entered invalid stock</string>
+
 </resources>

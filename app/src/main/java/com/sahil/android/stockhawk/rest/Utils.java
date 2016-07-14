@@ -6,14 +6,15 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.sahil.android.stockhawk.R;
 import com.sahil.android.stockhawk.data.QuoteColumns;
 import com.sahil.android.stockhawk.data.QuoteProvider;
-import com.sahil.android.stockhawk.ui.MyStocksActivity;
 
-import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import static android.os.Looper.getMainLooper;
 
@@ -45,7 +46,7 @@ public class Utils {
             mHandler.post(new Runnable() {
               @Override
               public void run() {
-                Toast.makeText(mContext, "Entered invalid stock", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, mContext.getString(R.string.invalid_stock), Toast.LENGTH_SHORT).show();
               }
             });
           }
@@ -55,7 +56,6 @@ public class Utils {
           if (resultsArray != null && resultsArray.length() != 0){
             for (int i = 0; i < resultsArray.length(); i++){
               jsonObject = resultsArray.getJSONObject(i);
-              Log.v("sahil verifying json", jsonObject.toString(2));
               batchOperations.add(buildBatchOperation(jsonObject));
             }
           }
