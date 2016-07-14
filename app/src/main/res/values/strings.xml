@@ -1,25 +1,30 @@
 <resources>
 
-  <string name="app_name">Stock Hawk</string>ddd
-  <string name="action_settings">Settings</string>
-  <string name="action_change_units">Change Units</string>
-  <string name="symbol_search">Symbol Search</string>
-  <string name="content_test">Search for a Stock Symbol</string>
+  <!-- Used in MyStocksActivity -->
+
+  <string name="app_name" translatable="true">Stock Hawk</string>
+  <string name="action_settings" translatable="true">Settings</string>
+  <string name="action_change_units" translatable="true">Change Units</string>
+  <string name="symbol_search" translatable="true">Symbol Search</string>
+  <string name="content_test" translatable="true">Search for a Stock Symbol</string>
   <string name="input_hint">FB</string>
   <string name="input_prefill"></string>
-  <string name="network_toast">Uh-oh! This app requires an internet connection.Unable to load updated stocks</string>
+  <string name="network_toast" translatable="true">Uh-oh! This app requires an internet connection.Unable to load updated stocks</string>
   <string name="stock_symbol_string">GOOG</string>
-  <string name="add_desc">Add a stock to watchlist</string>
-  <string name="watchlist">Go to watchlist of your stocks</string>
-  <string name="stock_price">Price of stock</string>
-  <string name="percent_change">Change in price of stock</string>
-  <string name="history_activity_name">Performance History</string>
-  <string name="past_performance">Graph showing past performance of stock</string>
-  <string name="stock_already_saved">This stock is already saved!</string>
-  <string name="portfolio">My Portfolio</string>
+  <string name="stock_already_saved" translatable="true">This stock is already saved!</string>
+
+  <!-- Content descriptions -->
+
+  <string name="add_desc" translatable="true">Add a stock to watchlist</string>
+  <string name="watchlist" translatable="true">Go to watchlist of your stocks</string>
+  <string name="stock_price" translatable="true">Price of stock</string>
+  <string name="percent_change" translatable="true">Change in price of stock</string>
+  <string name="past_performance" translatable="true">Graph showing past performance of stock</string>
+  <string name="portfolio" translatable="true">My Portfolio</string>
 
   <!-- Used in HistoryActivity's Stock details textView -->
 
+  <string name="history_activity_name">Performance History</string>
   <string name="name" translatable="true">Name : </string>
   <string name="symbol" translatable="true">Stock Ticker : </string>
   <string name="exchange" translatable="true">Stock Exchange : </string>
