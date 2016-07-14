@@ -1,7 +1,5 @@
 package com.sahil.android.stockhawk.service;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -9,19 +7,18 @@ import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.RemoteException;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
-import com.sahil.android.stockhawk.R;
 import com.sahil.android.stockhawk.data.QuoteColumns;
 import com.sahil.android.stockhawk.data.QuoteProvider;
 import com.sahil.android.stockhawk.rest.Utils;
-import com.sahil.android.stockhawk.widget.StockWidgetProvider;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

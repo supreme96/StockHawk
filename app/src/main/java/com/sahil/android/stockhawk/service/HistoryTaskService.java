@@ -4,13 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
 import com.sahil.android.stockhawk.rest.Utils;
-import com.sahil.android.stockhawk.ui.HistoryActivity;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -19,7 +17,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by sahil on 16/6/16.
@@ -56,14 +53,9 @@ public class HistoryTaskService extends GcmTaskService {
             }
 
             Bundle bundle = taskParams.getExtras();
-
             symbol = bundle.getString("symbol");
             startDate = bundle.getString("startDate");
             endDate = bundle.getString("endDate");
-
-
-
-
 
             StringBuilder urlStringBuilder = new StringBuilder();
             try {
@@ -74,8 +66,6 @@ public class HistoryTaskService extends GcmTaskService {
                 urlStringBuilder.append(URLEncoder.encode(" and startDate = \"" + startDate + "\"", "iso-8859-1"));
                 urlStringBuilder.append(URLEncoder.encode(" and endDate = \"" + endDate + "\"", "iso-8859-1"));
                 urlStringBuilder.append("&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");
-                Log.v("Sahil url verify :", urlStringBuilder.toString());
-
 
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -93,15 +83,8 @@ public class HistoryTaskService extends GcmTaskService {
                     e.printStackTrace();
                 }
             }
-            Log.v("history response", getResponse);
             if (getResponse != null) {
                 ArrayList<String> resultsList = Utils.historyJsonToGraphValues(getResponse);
-                //HistoryActivity.drawGraph(resultsList);
-                /*
-                Intent i = new Intent(mContext, HistoryActivity.class);
-                i.putStringArrayListExtra("list", resultsList);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(i);*/
 
                 Intent intent = new Intent("historyResults");
                 intent.putStringArrayListExtra("list", resultsList);
