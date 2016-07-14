@@ -1,30 +1,21 @@
 package com.sahil.android.stockhawk.ui;
 
-import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.ParseException;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.gcm.TaskParams;
-import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.sahil.android.stockhawk.R;
 import com.sahil.android.stockhawk.rest.StockInfo;
 import com.sahil.android.stockhawk.service.HistoryIntentService;
-import com.sahil.android.stockhawk.service.HistoryTaskService;
 import com.sahil.android.stockhawk.service.InfoIntentService;
 
 import java.text.DateFormat;
@@ -41,14 +32,6 @@ public class HistoryActivity extends AppCompatActivity {
 
     ArrayList<String> results;
     GraphView graphView;
-
-/*
-    @Override
-    protected void onNewIntent(Intent intent) {
-        results = intent.getStringArrayListExtra("list");
-        drawGraph(results);
-    }
-*/
 
     @Override
     protected void onResume() {
@@ -75,25 +58,23 @@ public class HistoryActivity extends AppCompatActivity {
     protected BroadcastReceiver br_info = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //Bundle bundle = intent.getExtras();
             StockInfo object = (StockInfo) intent.getSerializableExtra("object");
-            Toast.makeText(context, "Name :" + object.Name, Toast.LENGTH_SHORT).show();
-            SimpleDateFormat f1 = new SimpleDateFormat("MM/dd/yyyy");
-            SimpleDateFormat f2 = new SimpleDateFormat("EEE, dd MMM yyyy ");
+            SimpleDateFormat f1 = new SimpleDateFormat("MM/dd/yyyy");//Hardcoded to match result's format.
+            DateFormat f2 = DateFormat.getDateInstance(DateFormat.MEDIUM);
             TextView infoView = (TextView) findViewById(R.id.infoView);
             try {
-                infoView.setText("Name : " + object.Name + "\n"+
-                        "Stock Ticker : " + object.symbol + "\n"+
-                        "Stock Exchange :" + object.StockExchange + "\n" +
-                        "Currency : " + object.Currency + "\n"+
-                        "Ask Price :" + object.Ask + "$ " + "\n"+
-                        "Bid Price : " + object.Bid + "$ " + "\n"+
-                        "Price Ranged Last : " + object.DaysRange + "$" + "\n"+
-                        "Change : " + object.Change + "$ "+ "\n"+
-                        "Last Trade Date : " + f2.format(f1.parse(object.LastTradeDate)) + "\n" +
-                        "Year High : " + object.YearHigh + "$" + "\n"+
-                        "Year Low : " + object.YearLow + "$" + "\n"+
-                        "Market Capitalization : " + object.MarketCapitalization + "$" + "\n");
+                infoView.setText(getString(R.string.name) + object.Name + "\n"+
+                        getString(R.string.symbol) + object.symbol + "\n"+
+                        getString(R.string.exchange) + object.StockExchange + "\n" +
+                        getString(R.string.currency) + object.Currency + "\n"+
+                        getString(R.string.ask) + object.Ask + getString(R.string.dollar) + "\n"+
+                        getString(R.string.bid) + object.Bid + getString(R.string.dollar) + "\n"+
+                        getString(R.string.days_range) + object.DaysRange + getString(R.string.dollar) + "\n"+
+                        getString(R.string.change) + object.Change + getString(R.string.dollar) + "\n"+
+                        getString(R.string.last_trade_date) + f2.format(f1.parse(object.LastTradeDate)) + "\n" +
+                        getString(R.string.year_high) + object.YearHigh + getString(R.string.dollar) + "\n"+
+                        getString(R.string.year_low) + object.YearLow + getString(R.string.dollar) + "\n"+
+                        getString(R.string.market_capitalization) + object.MarketCapitalization + getString(R.string.dollar) + "\n");
             } catch (java.text.ParseException e) {
                 e.printStackTrace();
             }
@@ -113,14 +94,13 @@ public class HistoryActivity extends AppCompatActivity {
         mInfoServiceIntent.putExtras(bund);
         startService(mInfoServiceIntent);
         startService(mServiceIntent);
-        Log.v("sahil create", "On create complete");
     }
 
     public void drawGraph(){
         Float[] close  = new Float[results.size()/3];
         Date [] dates = new Date[results.size()/3];
         DataPoint[] datapoints = new DataPoint[results.size()/3];
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");//Hardcoded to match api result's format
         Date date;
         for(int i=0; i<results.size();i+=3){
             close[i/3] = Float.parseFloat(results.get(i+1));
@@ -133,25 +113,12 @@ public class HistoryActivity extends AppCompatActivity {
         for(int i=0;i<dates.length;i++){
             datapoints[i] = new DataPoint(i, close[close.length-1-i]);
         }
-        for(int i = 0 ; i<datapoints.length;i++){
-            Log.v("data parsed", "date : " + dates[dates.length-1-i]+" close :" + close[close.length-1-i]);}
-
-        //GRAPH PROBLEM IS DUE TO HERE
-
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(datapoints);
-        /*graphView.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getApplicationContext()));
-        graphView.getGridLabelRenderer().setHumanRounding(false);
-        graphView.getGridLabelRenderer().setNumHorizontalLabels(3);
-        graphView.getViewport().setXAxisBoundsManual(false);*/
-        //graphView.getViewport().setMinX(dates[0].getTime());
-        //graphView.getViewport().setMaxX(dates[dates.length-1].getTime());
-
-        graphView.setTitle("Price over past 30 days");
+        graphView.setTitle(getString(R.string.graph_label));
         graphView.setTitleColor(getResources().getColor(R.color.white));
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView);
-        staticLabelsFormatter.setHorizontalLabels(new String[] {" 30 days ago ", " 15 days ago ", " yesterday "});
+        staticLabelsFormatter.setHorizontalLabels(new String[] {getString(R.string.days30), getString(R.string.days15), getString(R.string.yesterday)});
         graphView.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
-
         graphView.addSeries(series);
     }
 }

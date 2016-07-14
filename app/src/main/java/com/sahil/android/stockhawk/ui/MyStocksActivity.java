@@ -8,20 +8,24 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.gcm.GcmNetworkManager;
+import com.google.android.gms.gcm.PeriodicTask;
+import com.google.android.gms.gcm.Task;
+import com.melnykov.fab.FloatingActionButton;
 import com.sahil.android.stockhawk.R;
 import com.sahil.android.stockhawk.data.QuoteColumns;
 import com.sahil.android.stockhawk.data.QuoteProvider;
@@ -30,16 +34,10 @@ import com.sahil.android.stockhawk.rest.RecyclerViewItemClickListener;
 import com.sahil.android.stockhawk.rest.Utils;
 import com.sahil.android.stockhawk.service.StockIntentService;
 import com.sahil.android.stockhawk.service.StockTaskService;
-import com.google.android.gms.gcm.GcmNetworkManager;
-import com.google.android.gms.gcm.PeriodicTask;
-import com.google.android.gms.gcm.Task;
-import com.melnykov.fab.FloatingActionButton;
 import com.sahil.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
-import static android.R.id.input;
 
 public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -94,7 +92,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
               @Override public void onItemClick(View v, int position) {
                 //TODO:
                 // do something on item click
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//Hardcoded to match api syntax.
                 Calendar cal = Calendar.getInstance();
                 String endDate = sdf.format(cal.getTime());
                 cal.add(Calendar.DATE, -30);
@@ -109,7 +107,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
                 symbol = c.getString(0);
                 c.close();
-                //Log.v("sahil inside service", "symbol :"+symbol+"  startDate:"+startDate+ "  endDate :" +endDate);
                 Intent i = new Intent(getApplicationContext(), HistoryActivity.class);
                 Bundle argsBundle = new Bundle();
                 argsBundle.putString("symbol", symbol);
