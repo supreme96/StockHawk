@@ -75,45 +75,10 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
         this.context = context;
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
-        /*list.add("sahil");
-        list.add("sahil2");
-        list.add("sahil3");
-        list.add("sahil4");
-        list.add("sahil5");
-        list.add("sahil6");
-        list.add("sahil7");*/
-
-        /*
-        mCursor = this.context.getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI,
-                new String[]{ QuoteColumns._ID, QuoteColumns.SYMBOL, QuoteColumns.BIDPRICE,
-                        QuoteColumns.PERCENT_CHANGE, QuoteColumns.CHANGE, QuoteColumns.ISUP},
-                QuoteColumns.ISCURRENT + " = ?",
-                new String[]{"1"},
-                null);
-
-        list.clear();
-
-        if(mCursor.getCount()!=0){
-        for(mCursor.moveToFirst(); !mCursor.isAfterLast(); mCursor.moveToNext()){
-            list.add(new WidgetQuote(mCursor.getString(mCursor.getColumnIndex(QuoteColumns.SYMBOL)),
-                    mCursor.getString(mCursor.getColumnIndex(QuoteColumns.BIDPRICE)),
-                    mCursor.getString(mCursor.getColumnIndex(QuoteColumns.CHANGE))));
-        }}
-        else{
-            System.out.println("cursor empty sahil");
-        }*/
-
     }
 
     @Override
-    public int getCount() {/*
-        if(mCursor.getCount() == 0){
-            return 5;
-        }
-        else{
-            return 1;
-        }
-    }*/
+    public int getCount() {
         return list.size();
     }
 
@@ -121,16 +86,12 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
     public RemoteViews getViewAt(int i) {
         final RemoteViews remoteView = new RemoteViews(
                 context.getPackageName(), R.layout.list_item_quote);
-        String string = list.get(i).symbol+"\t"+list.get(i).bid+"+\t"+list.get(i).change;
         remoteView.setTextViewText(R.id.stock_symbol, list.get(i).symbol);
         remoteView.setTextViewText(R.id.bid_price, list.get(i).bid+"$");
         remoteView.setTextViewText(R.id.change, list.get(i).change+"$");
         remoteView.setTextColor(R.id.stock_symbol, context.getResources().getColor(R.color.black));
         remoteView.setTextColor(R.id.bid_price, context.getResources().getColor(R.color.black));
         remoteView.setTextColor(R.id.change, context.getResources().getColor(R.color.black));
-
-        //Log.v("widget quote sahil", string);
-        //remoteView.setTextViewText(R.id.widget_list_text, "sahil");
         return remoteView;
     }
 

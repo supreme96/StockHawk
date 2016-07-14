@@ -25,15 +25,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="My Portfolio"
+            android:text="@string/portfolio"
             android:id="@+id/button"
             android:contentDescription="@string/watchlist"/>
 
-
-
     </LinearLayout>
-
-
 
     <ListView
         android:layout_width="match_parent"
@@ -42,5 +38,4 @@
         android:layout_weight="1"
         android:visibility="visible"/>
 
-
-    </LinearLayout>
+</LinearLayout>

@@ -16,5 +16,6 @@
   <string name="history_activity_name">Performance History</string>
   <string name="past_performance">Graph showing past performance of stock</string>
   <string name="stock_already_saved">This stock is already saved!</string>
+  <string name="portfolio">My Portfolio</string>
 
 </resources>
