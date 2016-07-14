@@ -7,10 +7,10 @@
   <string name="action_change_units" translatable="true">Change Units</string>
   <string name="symbol_search" translatable="true">Symbol Search</string>
   <string name="content_test" translatable="true">Search for a Stock Symbol</string>
-  <string name="input_hint">FB</string>
-  <string name="input_prefill"></string>
+  <string name="input_hint" translatable="true">FB</string>
+  <string name="input_prefill" translatable="true"></string>
   <string name="network_toast" translatable="true">Uh-oh! This app requires an internet connection.Unable to load updated stocks</string>
-  <string name="stock_symbol_string">GOOG</string>
+  <string name="stock_symbol_string" translatable="true">GOOG</string>
   <string name="stock_already_saved" translatable="true">This stock is already saved!</string>
 
   <!-- Content descriptions -->
@@ -24,7 +24,7 @@
 
   <!-- Used in HistoryActivity's Stock details textView -->
 
-  <string name="history_activity_name">Performance History</string>
+  <string name="history_activity_name" translatable="true">Performance History</string>
   <string name="name" translatable="true">Name : </string>
   <string name="symbol" translatable="true">Stock Ticker : </string>
   <string name="exchange" translatable="true">Stock Exchange : </string>
