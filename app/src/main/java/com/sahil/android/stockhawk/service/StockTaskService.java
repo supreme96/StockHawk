@@ -122,8 +122,6 @@ public class StockTaskService extends GcmTaskService{
         getResponse = fetchData(urlString);
         Log.v("sahil stocktsksrvc ", urlString);
         result = GcmNetworkManager.RESULT_SUCCESS;
-        Intent dataUpdated = new Intent(ACTION_DATA_UPDATED);
-        mContext.sendBroadcast(dataUpdated);
         try {
           ContentValues contentValues = new ContentValues();
           // update ISCURRENT to 0 (false) so new data is current
@@ -141,7 +139,8 @@ public class StockTaskService extends GcmTaskService{
         e.printStackTrace();
       }
     }
-
+    Intent dataUpdated = new Intent(ACTION_DATA_UPDATED);
+    mContext.sendBroadcast(dataUpdated);
     return result;
   }
 
